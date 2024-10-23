@@ -1,30 +1,39 @@
 package frc.robot.Subsystem;
 import java.io.File;
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.XboxController;
 import swervelib.parser.SwerveParser;
 import swervelib.SwerveDrive;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+
 
 public class Drive {
     SwerveDrive swerveController; 
+    XboxController controller = new XboxController(0);
     
-    public Drive (String pathToConfig) {
-        File swerveDirectory = new File(FileSystem.getDeployDirectory(), "swerve");
-        SwerveDriveParser Parser = new SwerveDriveParser(swerveDirectory);
-        swerveController = Parser.createSwerveDrive()
+    public Drive () {
+        double maxSpeed = Units.feetToMeters (4.5);
+        File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+        try {
+            swerveController = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maxSpeed);
+        } catch (IOException e){
+            e.printStackTrace();
+        } 
         
     }
 
-    public void drive(double translationX, double translationY, double ) {
-        swerveDrive.drive(new Translation2d(translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
-                                        translationY.getAsDouble() * swerveDrive.getMaximumVelocity()),
-                    angularRotationX.getAsDouble() * swerveDrive.getMaximumAngularVelocity(),
-                    true,
-                    false);
-        
-    }
-
-    public void periodic() {
-    }
+    public void drivePeriodic () {
+        swerveController.drive(new Translation2d(controller.getLeftX() * swerveController.getMaximumVelocity(), 
+                                                controller.getLeftY() * swerveController.getMaximumVelocity()), 
+                                    controller.getRightX() * swerveController.getMaximumAngularVelocity(), 
+                                false, 
+                                false); 
+                                    
+                    
   }
+}
     

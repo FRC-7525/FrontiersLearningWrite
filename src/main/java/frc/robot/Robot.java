@@ -11,6 +11,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Subsystem.Shooter;
+import frc.robot.Subsystem.Drive;
+ 
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +31,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   Shooter roboShooter = new Shooter();
-
+  Drive driveManager = new Drive();
 
   @Override
   public void robotInit() {
@@ -55,6 +57,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    driveManager.drivePeriodic();
   }
 
   @Override
