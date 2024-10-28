@@ -1,0 +1,12 @@
+{
+  "imu": {
+    "type": "navx_usb"
+  },
+  "invertedIMU": false,
+  "modules": [
+    "backleft.json",
+    "backright.json",
+    "frontleft.json",
+    "frontright.json"
+  ]
+}

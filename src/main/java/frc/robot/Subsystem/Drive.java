@@ -5,15 +5,18 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import swervelib.SwerveDrive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 
+
 public class Drive {
     SwerveDrive swerveController; 
-    XboxController controller = new XboxController(0);
+    XboxController controller = new XboxController(0); 
     
     public Drive () {
         double maxSpeed = Units.feetToMeters (4.5);
@@ -23,12 +26,12 @@ public class Drive {
         } catch (IOException e){
             e.printStackTrace();
         } 
-        
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     }
 
     public void drivePeriodic () {
         swerveController.drive(new Translation2d(controller.getLeftX() * swerveController.getMaximumVelocity(), 
-                                                controller.getLeftY() * swerveController.getMaximumVelocity()), 
+                                                controller.getLeftY() * swerveController.getMaximumVelocity() *-1), 
                                     controller.getRightX() * swerveController.getMaximumAngularVelocity(), 
                                 false, 
                                 false); 
