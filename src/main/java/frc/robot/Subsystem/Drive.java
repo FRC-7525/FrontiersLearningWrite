@@ -19,7 +19,7 @@ public class Drive {
     XboxController controller = new XboxController(0); 
     
     public Drive () {
-        double maxSpeed = Units.feetToMeters (4.5);
+        double maxSpeed = Units.feetToMeters (16);
         File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
         try {
             swerveController = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maxSpeed);
