@@ -1,6 +1,5 @@
 package frc.robot.Subsystem;
 import java.io.File;
-import java.io.IOException;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -11,31 +10,40 @@ import swervelib.SwerveDrive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import swervelib.SwerveModule;
 
 
 
 public class Drive {
-    SwerveDrive swerveController; 
-    XboxController controller = new XboxController(0); 
+    private double maximumSpeed;
+    private File swerveJsonDirectory;
+    private SwerveDrive swerveDrive;
+    private XboxController controller;
+    SwerveModule [] modules;
+
     
     public Drive () {
-        double maxSpeed = Units.feetToMeters (16);
-        File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+        controller = new XboxController(0);
+        maximumSpeed = Units.feetToMeters(16);
         try {
-            swerveController = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maxSpeed);
-        } catch (IOException e){
-            e.printStackTrace();
+            swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+            SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+            System.out.println("swerve config success");
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("failed swerve config");
         } 
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+
+        modules = swerveDrive.getModules();
     }
 
     public void drivePeriodic () {
-        swerveController.drive(new Translation2d(controller.getLeftX() * swerveController.getMaximumVelocity(), 
-                                                controller.getLeftY() * swerveController.getMaximumVelocity() *-1), 
-                                    controller.getRightX() * swerveController.getMaximumAngularVelocity(), 
-                                false, 
-                                false); 
-                                    
+        double xMovement = MathUtil.applyDeadband(controller.getLeftY(), 0.1) * 100;
+        double rotation = MathUtil.applyDeadband(controller.getRightX(), 0.1) * 100;
+        double yMovement = MathUtil.applyDeadband(controller.getLeftX(), 0.1) * 100;
+        swerveDrive.drive(new Translation2d(xMovement, yMovement), rotation, false, false);   
+                            
                     
   }
 }
